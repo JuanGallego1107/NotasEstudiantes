@@ -44,7 +44,8 @@ public class GradesRepositoryImpl implements GradesRepository {
         List<Grades> gradestList = new ArrayList<>();
 
         try (Statement statement = getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * from grades")) {
+             ResultSet resultSet = statement.executeQuery("SELECT g.*, st.* as student FROM grades as g"+
+                     "inner join students as st ON ()")) {
             while (resultSet.next()) {
                 Grades grades = createGrades(resultSet);
                 gradestList.add(grades);
