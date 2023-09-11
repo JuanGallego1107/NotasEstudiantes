@@ -1,8 +1,12 @@
 package org.example.mapper.dtos;
 
+import org.example.domain.models.Student;
+import org.example.domain.models.Subject;
+
 public record GradesDto(
         Long gradesId,
-        double grade1,
-        double grade2,
-        double grade3) {
+        Student student,
+        Subject subject,
+        double grade,
+        String corte) {
 }

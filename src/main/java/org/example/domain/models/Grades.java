@@ -2,15 +2,21 @@ package org.example.domain.models;
 
 public class Grades {
     private Long id;
-    private double grade1;
-    private double grade2;
-    private double grade3;
+    private Student student;
+    private Subject subject;
+    private Double grade;
+    private String corte;
 
-    public Grades(Long id, double grade1, double grade2, double grade3) {
+    public Grades(Long id, Student student, Subject subject, Double grade, String corte) {
         this.id = id;
-        this.grade1 = grade1;
-        this.grade2 = grade2;
-        this.grade3 = grade3;
+        this.student = student;
+        this.subject = subject;
+        this.grade = grade;
+        this.corte = corte;
+    }
+
+    public Grades() {
+
     }
 
     public Long getId() {
@@ -21,41 +27,46 @@ public class Grades {
         this.id = id;
     }
 
-    public double getGrade1() {
-        return grade1;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setGrade1(double grade1) {
-        this.grade1 = grade1;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
-    public double getGrade2() {
-        return grade2;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setGrade2(double grade2) {
-        this.grade2 = grade2;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
-    public double getGrade3() {
-        return grade3;
+    public Double getGrade() {
+        return grade;
     }
 
-    public void setGrade3(double grade3) {
-        this.grade3 = grade3;
+    public void setGrade(Double grade) {
+        this.grade = grade;
     }
 
-    public double getAverageGrade() {
-        return (grade1+grade2+grade3)/3;
+    public String getCorte() {
+        return corte;
+    }
+
+    public void setCorte(String corte) {
+        this.corte = corte;
     }
 
     @Override
     public String toString() {
         return "Grades{" +
                 "id=" + id +
-                ", grade1=" + grade1 +
-                ", grade2=" + grade2 +
-                ", grade3=" + grade3 +
+                ", student=" + student +
+                ", subject=" + subject +
+                ", grade=" + grade +
+                ", corte='" + corte + '\'' +
                 '}';
     }
 }

@@ -10,8 +10,5 @@ import java.util.List;
 public record SubjectDto (
         Long subjectId,
         String subjectName,
-        Semester semester,
-        Teacher teacher,
-        Grades grades,
-        List<Student> students){
+        Teacher teacher){
 }

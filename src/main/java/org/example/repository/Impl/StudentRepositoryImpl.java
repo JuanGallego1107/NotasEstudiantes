@@ -3,6 +3,7 @@ package org.example.repository.Impl;
 import org.example.conexion.ConexionBD;
 import org.example.domain.models.Student;
 import org.example.mapper.dtos.StudentDto;
+import org.example.mapper.mappers.StudentMapper;
 import org.example.repository.StudentRepository;
 
 import java.sql.*;
@@ -14,35 +15,36 @@ public class StudentRepositoryImpl implements StudentRepository {
     private Connection getConnection() throws SQLException {
         return ConexionBD.getInstance();
     }
-    private StudentDto createStudent(ResultSet rs) throws SQLException {
-        StudentDto student = new StudentDto(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("degree"),
-                rs.getString("email"));
+    private Student createStudent(ResultSet rs) throws SQLException {
+        Student student = new Student();
+        student.setId(rs.getLong("id"));
+        student.setName(rs.getString("nombre"));
+        student.setEmail(rs.getString("email"));
+        student.setDegree(rs.getString("degree"));
+        student.setSemester(rs.getString("semester"));
         return student;
     }
     @Override
     public List<StudentDto> studentList() {
-        List<StudentDto> studentList = new ArrayList<>();
+        List<Student> studentList = new ArrayList<>();
 
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * from students")) {
             while (resultSet.next()) {
-                StudentDto student = createStudent(resultSet);
+                Student student = createStudent(resultSet);
                 studentList.add(student);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return studentList;
+        return StudentMapper.mapFrom(studentList);
     }
 
     @Override
     public StudentDto byId(Long id) {
-        StudentDto student = null;
+        Student student = null;
         try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT * FROM students WHERE id = ?")) {
+                .prepareStatement("SELECT ")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -52,7 +54,7 @@ public class StudentRepositoryImpl implements StudentRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return student;
+        return StudentMapper.mapFrom(student);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Main {
             //System.out.println(repository.studentList());
             System.out.println(repository.byId(5L));
             //repository.delete(2L);
-            repository.update(new StudentDto(1L, "Ana Zuluaga", "anazul683@cue.edu.co", "Derecho"));
+            repository.update(new StudentDto(1L, "Ana Zuluaga", "anazul683@cue.edu.co", "Derecho","II"));
 
         }catch (SQLException e) {
             e.printStackTrace();

@@ -8,16 +8,18 @@ import java.util.List;
 public class GradesMapper {
     public static GradesDto mapFrom(Grades source) {
         return new GradesDto(source.getId(),
-                source.getGrade1(),
-                source.getGrade2(),
-                source.getGrade3());
+                source.getStudent(),
+                source.getSubject(),
+                source.getGrade(),
+                source.getCorte());
     }
 
     public static Grades mapFrom(GradesDto source){
         return new Grades(source.gradesId(),
-                source.grade1(),
-                source.grade2(),
-                source.grade3());
+                source.student(),
+                source.subject(),
+                source.grade(),
+                source.corte());
     }
 
     public static List<GradesDto> mapFrom(List<Grades> sources){
