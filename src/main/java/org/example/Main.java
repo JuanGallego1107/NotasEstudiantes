@@ -28,22 +28,23 @@ public class Main {
 
             System.out.println(studentService.studentList());
             System.out.println(studentService.byId(2L));
-            //System.out.println(studentRepository.update(););
+            studentService.update(new StudentDto(1L,"Daniela Morales","danMi@cue.edu.co","Enfermeria","IV"));
             //studentRepository.delete(1L);
 
             System.out.println(teacherService.teacherList());
             System.out.println(teacherService.byId(1L));
-            //System.out.println(teacherRepository.update());
-            //teacherRepository.delete();
+            teacherService.update(new TeacherDto(1L,"Carlos Arias","carAr13@cue.edu.co"));
+            //teacherRepository.delete(2L);
 
             System.out.println(subjectService.subjectList());
             System.out.println(subjectService.byId(2L));
             subjectService.update(new SubjectDto(2L,"Ecuaciones diferenciales"));
-            //subjectRepository.delete();
+            //subjectRepository.delete(1L);
 
             System.out.println(gradesService.gradesList());
             System.out.println(gradesService.byId(1L));
             gradesService.update(new GradesDto(1L,3.6,"3"));
+            //gradesService.delete(1L);
 
 
         }catch (SQLException e) {
