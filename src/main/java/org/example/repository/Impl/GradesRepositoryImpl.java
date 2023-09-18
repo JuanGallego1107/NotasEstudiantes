@@ -4,6 +4,7 @@ import org.example.conexion.ConexionBD;
 import org.example.domain.models.Grades;
 import org.example.domain.models.Student;
 import org.example.domain.models.Subject;
+import org.example.domain.models.Teacher;
 import org.example.mapper.dtos.GradesDto;
 import org.example.mapper.dtos.StudentDto;
 import org.example.mapper.mappers.GradesMapper;
@@ -26,13 +27,22 @@ public class GradesRepositoryImpl implements GradesRepository {
 
         Student student = new Student();
         student.setId(rs.getLong("student_id"));
-        student.setName(rs.getString("student"));
+        student.setName(rs.getString("student_name"));
+        student.setEmail(rs.getString("student_email"));
+        student.setDegree(rs.getString("degree"));
+        student.setSemester(rs.getString("semester"));
         grades.setStudent(student);
 
         Subject subject = new Subject();
         subject.setId(rs.getLong("subject_id"));
-        subject.setName(rs.getString("subject"));
+        subject.setName(rs.getString("subject_name"));
+        Teacher teacher = new Teacher();
+        teacher.setId(rs.getLong("teacher_id"));
+        teacher.setName(rs.getString("teacher_name"));
+        teacher.setEmail(rs.getString("teacher_email"));
+        subject.setTeachers(teacher);
         grades.setSubject(subject);
+
 
         grades.setGrade(rs.getDouble("grade"));
         grades.setCorte(rs.getString("corte"));
@@ -44,8 +54,21 @@ public class GradesRepositoryImpl implements GradesRepository {
         List<Grades> gradestList = new ArrayList<>();
 
         try (Statement statement = getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT g.*, st.* as student FROM grades as g"+
-                     "inner join students as st ON ()")) {
+             ResultSet resultSet = statement.executeQuery("SELECT gr.*," +
+                     "       st.id AS student_id," +
+                     "       st.name AS student_name," +
+                     "       st.email AS student_email," +
+                     "       st.degree," +
+                     "       st.semester," +
+                     "       sb.id AS subject_id," +
+                     "       sb.name AS subject_name," +
+                     "       th.id AS teacher_id," +
+                     "       th.name AS teacher_name," +
+                     "       th.email AS teacher_email " +
+                     "FROM grades gr " +
+                     "JOIN students st ON gr.student_id = st.id " +
+                     "JOIN subjects sb ON gr.subject_id = sb.id " +
+                     "JOIN teachers th ON sb.teacher_id = th.id; " )) {
             while (resultSet.next()) {
                 Grades grades = createGrades(resultSet);
                 gradestList.add(grades);
@@ -58,9 +81,24 @@ public class GradesRepositoryImpl implements GradesRepository {
 
     @Override
     public GradesDto byId(Long id) {
-            Grades grades = null;
+        Grades grades = null;
         try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT * FROM grades WHERE id = ?")) {
+                .prepareStatement("SELECT gr.*," +
+                        "       st.id AS student_id," +
+                        "       st.name AS student_name," +
+                        "       st.email AS student_email," +
+                        "       st.degree," +
+                        "       st.semester," +
+                        "       sb.id AS subject_id," +
+                        "       sb.name AS subject_name," +
+                        "       th.id AS teacher_id," +
+                        "       th.name AS teacher_name," +
+                        "       th.email AS teacher_email " +
+                        "FROM grades gr " +
+                        "JOIN students st ON gr.student_id = st.id " +
+                        "JOIN subjects sb ON gr.subject_id = sb.id " +
+                        "JOIN teachers th ON sb.teacher_id = th.id " +
+                        "WHERE gr.id = ?;")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -75,11 +113,34 @@ public class GradesRepositoryImpl implements GradesRepository {
 
     @Override
     public void update(GradesDto grades) {
+        String sql;
+        if (grades.gradesId() != null && grades.gradesId()>0) {
+            sql = "UPDATE grades SET grade=?, corte=? WHERE id=?";
+        } else {
+            sql = "INSERT INTO grades(grade, corte) VALUES(?,?)";
+        }
+        try(PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setDouble(1, grades.grade());
 
+            if (grades.gradesId() != null && grades.gradesId()>0) {
+                stmt.setString(2, grades.corte());
+                stmt.setLong(3, grades.gradesId());
+            } else{
+                stmt.setString(2, grades.corte());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete(Long id) {
-
+        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM grades WHERE id =?")){
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
